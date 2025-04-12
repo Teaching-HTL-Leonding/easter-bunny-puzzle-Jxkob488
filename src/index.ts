@@ -1,5 +1,7 @@
 import p5 from 'p5';
 
+const amountOfCells = 4;
+
 let bunnyImage: p5.Image;
 
 const p = new p5((sketch) => {
@@ -22,10 +24,21 @@ function draw() {
   p.noFill();
   p.strokeWeight(2);
 
-  for (let j = 0; j <= 5000; j += 100) {
-    for (let i = 0; i <= 500; i += 100) {
-      p.image(bunnyImage, i, j, 100, 100, i, j, 100, 100);
-      p.rect(i, j, 100, 100);
+  const cellWidth = p.width / amountOfCells;
+  const cellHeight = p.height / amountOfCells;
+
+  const imgCellWidth = bunnyImage.width / amountOfCells;
+  const imgCellHeight = bunnyImage.height / amountOfCells;
+
+  for (let i = 0; i < amountOfCells; i++) {
+    for (let j = 0; j < amountOfCells; j++) {
+      const x = j * imgCellWidth;
+      const y = i * imgCellHeight;
+      const dx = j * cellWidth;
+      const dy = i * cellHeight;
+
+      p.image(bunnyImage, dx, dy, cellWidth, cellHeight, x, y, imgCellWidth, imgCellHeight);
+      p.rect(dx, dy, cellWidth, cellHeight);
     }
   }
 }
