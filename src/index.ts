@@ -1,44 +1,54 @@
 import p5 from 'p5';
 
-const amountOfCells = 4;
-
 let bunnyImage: p5.Image;
+const TILES = 3;
+
+const randomTilesX: number[][] = [];
+const randomTilesY: number[][] = [];
 
 const p = new p5((sketch) => {
   sketch.setup = setup;
-  sketch.preload = preload;
   sketch.draw = draw;
+  sketch.preload = preload;
 });
 
 function preload() {
-  bunnyImage = p.loadImage('https://cddataexchange.blob.core.windows.net/data-exchange/bunny.png');
+  bunnyImage = p.loadImage('assets/bunny.png');
 }
 
 function setup() {
-  p.createCanvas(400, 400);
+  p.createCanvas(500, 500);
+  p.background('red');
+
+  const tileSize = 500 / TILES;
+  for (let x = 0; x < TILES; x++) {
+    randomTilesX[x] = [];
+    randomTilesY[x] = [];
+    for (let y = 0; y < TILES; y++) {
+      randomTilesX[x][y] = Math.floor(p.random(TILES)) * tileSize;
+      randomTilesY[x][y] = Math.floor(p.random(TILES)) * tileSize;
+    }
+  }
 }
 
 function draw() {
-  p.background('white');
-  p.stroke('white');
   p.noFill();
+
+  p.stroke('white');
   p.strokeWeight(2);
 
-  const cellWidth = p.width / amountOfCells;
-  const cellHeight = p.height / amountOfCells;
+  for (let x = 0; x < TILES; x++) {
+    for (let y = 0; y < TILES; y++) {
+      if (x !== TILES - 1 || y !== TILES - 1) {
+        const imageX = randomTilesX[x][y];
+        const imageY = randomTilesY[x][y];
 
-  const imgCellWidth = bunnyImage.width / amountOfCells;
-  const imgCellHeight = bunnyImage.height / amountOfCells;
+        const tileSize = 500 / TILES;
 
-  for (let i = 0; i < amountOfCells; i++) {
-    for (let j = 0; j < amountOfCells; j++) {
-      const x = j * imgCellWidth;
-      const y = i * imgCellHeight;
-      const dx = j * cellWidth;
-      const dy = i * cellHeight;
+        p.image(bunnyImage, tileSize * x, tileSize * y, tileSize, tileSize, imageX, imageY, tileSize, tileSize);
 
-      p.image(bunnyImage, dx, dy, cellWidth, cellHeight, x, y, imgCellWidth, imgCellHeight);
-      p.rect(dx, dy, cellWidth, cellHeight);
+        p.rect(imageX, imageY, tileSize, tileSize);
+      }
     }
   }
 }
